@@ -3,46 +3,52 @@ import os
 import itertools
 import time
 
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) # Define o local para abrir o arquivo
 passwd_dir = os.path.join(__location__, 'usuarios.txt')
 
 def brute_force():
+
     fail = 0
     tenta = 0
-    letters = [chr(i) for i in range(97, 123)]  # ASCII lowercase (a-z)
+    letters = [chr(i) for i in range(97, 123)]  # Adiciona letras minúsculas (a-z)
 
-    with open(passwd_dir, 'r') as arquivo:
-        linha = arquivo.readline().strip()  # Read first line
+    with open(passwd_dir, 'r') as arquivo: # Abre o arquivo
 
-        while linha:  # Process each password entry
-            n, s = linha.split(',')
-            #print(linha)
-            found = False
-            comeco = time.time()
-            if tenta > 0:
+        linha = arquivo.readline().strip()  # Pega a primeira linha
+
+        while linha: 
+
+            n, s = linha.split(',') # Separa o nome e a senha
+            found = False 
+            comeco = time.time() # Começa a contar o tempo
+
+            if tenta > 0: # Usado para decidir se vai manter as letras maiúsculas ou especiais
                 tenta -= 1
 
             while not found:
-                combinations = itertools.product(letters, repeat=4)  # Create iterator
-                combinations_iter = iter(combinations)  # Explicitly make it an iterator
+
+                combinations = itertools.product(letters, repeat=4)  #  Cria combinações de 4 caracteres
+                combinations_iter = iter(combinations)  
 
                 while True:
                     try:
                         
-                        combination = next(combinations_iter)  # Get next combination
+                        combination = next(combinations_iter)  # Gera a próxima combinação
                         senha = ''.join(combination)
-                        brute = hashlib.md5(senha.encode()).hexdigest()
+                        brute = hashlib.md5(senha.encode()).hexdigest() # Gera o hash da senha
 
-                        if brute in s:
-                            #print(f"Senha encontrada: {''.join(combination)}")
-                            fim = time.time()
-                            #print(f"Tempo gasto: {fim - comeco:.2f} segundos")
+                        if brute in s: # Verifica se o hash gerado é igual ao hash da senha no arquivo
+
+                            print(f"Senha encontrada: {''.join(combination)}")
+                            fim = time.time() # Termina a contagem do tempo
+                            print(f"Tempo gasto: {fim - comeco:.2f} segundos")
                             found = True
-                            print(f"Nome:{n}, tenta:{tenta}, fail:{fail}, tempo:{fim - comeco:.2f}s")
-                            if tenta == 0:
+                            #print(f"Nome:{n}, tenta:{tenta}, fail:{fail}, tempo:{fim - comeco:.2f}s") # Usado para debug
+                            
+                            if tenta == 0: # Caso não ache nas letras minúsculas, tenta com letras maiúsculas ou especiais
                                 if fail == 1:
                                     try:
-                                        #print('Letras maiusculas removidas')
+                                        #print('Letras maiusculas removidas') # Usado para debug
                                         letters.clear()
                                         letters = [chr(i) for i in range(97, 123)]
                                     except:
@@ -51,7 +57,7 @@ def brute_force():
                                 if fail == 2:
                                     
                                     try:
-                                        #print('Caractéres especiais removidos')
+                                        #print('Caractéres especiais removidos') # Usado para debug
                                         letters.clear()
                                         letters = [chr(i) for i in range(97, 123)]
                                     except:
@@ -61,24 +67,23 @@ def brute_force():
                                     
                             break
                     
-                    except StopIteration:  # Iterator is exhausted
+                    except StopIteration:  # Quando não há mais combinações
                         
                         fail += 1
                         tenta += 1
 
-                        if fail == 1:
-                            #print("Tentando com letras maiúsculas...")
-                            letters.extend([chr(i) for i in range(65, 91)])  # Add uppercase letters
+                        if fail == 1: 
+                            #print("Tentando com letras maiúsculas...") # Usado para debug
+                            letters.extend([chr(i) for i in range(65, 91)])  # Adiciona letras maiúsculas (A-Z)
                             tenta += 1
                         elif fail == 2:
-                            #print("Tentando com caracteres especiais...")
-                            letters.extend([chr(i) for i in range(33, 65)])  # Special characters ('!' - '@')
-                            letters.extend([chr(i) for i in range(91, 97)])  # Special characters ('[' - '`')
-                            letters.extend([chr(i) for i in range(123, 127)])  # Special characters ('{' - '~')
-                        #print(letters)
-                        break  # Restart loop with new letters
+                            #print("Tentando com caracteres especiais...") # Usado para debug
+                            letters.extend([chr(i) for i in range(33, 65)])  # Caractéres especiais ('!' - '@')
+                            letters.extend([chr(i) for i in range(91, 97)])  # Caractéres especiais ('[' - '`')
+                            letters.extend([chr(i) for i in range(123, 127)])  # Caractéres especiais ('{' - '~')
+                        break  # Reinicia loop com caractéres novos
 
-            linha = arquivo.readline().strip()  # Read next line
+            linha = arquivo.readline().strip()  # Vai para a próxima linha
 
 brute_force()
 print("Pressione Enter para sair...")
