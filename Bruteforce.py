@@ -1,3 +1,4 @@
+# Max Antonio e Luiz Henrique
 import hashlib
 import os
 import itertools
