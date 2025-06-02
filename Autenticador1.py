@@ -13,6 +13,8 @@ passwd_dir = os.path.join(__location__, 'usuarios.txt')
 
 def input_usuario():
     global nome, senha
+    nome = ''
+    senha = ''
     while len(nome) != 4 or len(senha) != 4:
             
             nome = input("Digite o nome do usuario: ")
@@ -26,6 +28,8 @@ def input_usuario():
             if len(senha) != 4:
                 print("Senha deve ter 4 caracteres.")
                 continue
+
+            return
 
 def cadastrar_usuario(nome, senha):
 
@@ -51,7 +55,7 @@ def autenticar_usuario(nome, senha):
         print("Arquivo de usuarios não encontrado.")
 
 while True:
-    print("1. Cadastrar usuarioz\n2. Autenticar usuario\n3. Sair")
+    print("1. Cadastrar usuario\n2. Autenticar usuario\n3. Sair")
     opcao = input("Escolha uma opção: ")
     if opcao == '1':
 
