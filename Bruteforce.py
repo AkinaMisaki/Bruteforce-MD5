@@ -1,4 +1,3 @@
-# Max Antonio e Luiz Henrique
 import hashlib
 import os
 import itertools
@@ -22,6 +21,7 @@ def brute_force():
             n, s = linha.split(',') # Separa o nome e a senha
             found = False 
             comeco = time.time() # Começa a contar o tempo
+            print(f"\nProcurando senha para o usuário: {n}", end='')  # Exibe o nome do usuário
 
             if tenta > 0: # Usado para decidir se vai manter as letras maiúsculas ou especiais
                 tenta -= 1
@@ -40,7 +40,7 @@ def brute_force():
 
                         if brute in s: # Verifica se o hash gerado é igual ao hash da senha no arquivo
 
-                            print(f"Senha encontrada: {''.join(combination)}")
+                            print(f"\rUsuário:{n}", " "*23, f"\nSenha encontrada: {''.join(combination)}\n", end='')
                             fim = time.time() # Termina a contagem do tempo
                             print(f"Tempo gasto: {fim - comeco:.2f} segundos")
                             found = True
@@ -87,5 +87,5 @@ def brute_force():
             linha = arquivo.readline().strip()  # Vai para a próxima linha
 
 brute_force()
-print("Pressione Enter para sair...")
+print("\nPressione Enter para sair...")
 input()
